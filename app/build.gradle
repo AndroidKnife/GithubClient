@@ -1,27 +1,116 @@
 apply plugin: 'com.android.application'
-
-android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.3"
-
-    defaultConfig {
-        applicationId "com.hack.githubclient"
-        minSdkVersion 15
-        targetSdkVersion 23
-        versionCode 1
-        versionName "1.0"
-    }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
-}
+apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'me.tatarka.retrolambda'
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:23.4.0'
-    compile 'com.android.support:design:23.4.0'
+    // Support
+    compile deps.appcompat
+    compile deps.recyclerview
+    compile deps.design
+    compile deps.supportannotations
+
+    // RxJava
+    compile deps.rxjava
+    compile deps.rxandroid
+
+    // RxBus
+    compile(deps.rxbus) {
+        exclude group: 'com.hwangjr.utils', module: 'timber'
+    }
+
+    // ButterKnife
+    compile deps.butterknife
+    apt deps.butterknifecompiler
+
+    // Dagger
+    compile deps.dagger
+    apt deps.daggercompiler
+
+    // Retrofit
+    compile deps.retrofit
+    compile deps.gsonconvert
+    compile deps.rxjavaadapter
+
+    // OKHttp
+    compile deps.okhttp
+    compile deps.okhttploginterceptor
+
+    // Gson
+    compile deps.gson
+
+    // Glide
+    compile deps.glide
+    compile deps.glideokhttpintegration
+
+    // Leak Canary
+    compile deps.leakcanary
+
+    // Timber
+    compile deps.timber
+
+    // Pull to refresh
+    compile deps.ultraptr
+
+    // Tab Layout
+    compile deps.flycotablayout
+
+    // Debug
+    debugCompile deps.leakcanary
+
+    // Unit
+    testCompile deps.junit
+    testCompile deps.robolectric
+    testCompile deps.mockito
+    testCompile deps.leakcanarynoop
+
+    // Integration
+    androidTestCompile deps.testrunner
+    androidTestCompile deps.testrules
+    androidTestCompile deps.espresso
+    androidTestCompile deps.mockito
+    androidTestCompile deps.dexmaker
+    androidTestCompile deps.dexmakerdx
+    androidTestCompile deps.dexmakermockito
+    androidTestCompile deps.spoon
+
+    // Resolve conflicts between main and test APK:
+    androidTestCompile deps.appcompat
+    androidTestCompile deps.supportannotations
+}
+
+android {
+    compileSdkVersion rootProject.ext.android.compileSdkVersion
+    buildToolsVersion rootProject.ext.android.buildToolsVersion
+
+    defaultConfig {
+        applicationId "com.hack.githubclient"
+        minSdkVersion rootProject.ext.android.minSdkVersion
+        targetSdkVersion rootProject.ext.android.targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+
+        multiDexEnabled true
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    buildTypes {
+        debug {
+            versionNameSuffix "-debug"
+            minifyEnabled false
+            zipAlignEnabled false
+            shrinkResources false
+        }
+        release {
+            minifyEnabled true
+            zipAlignEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro', fileTree(dir: 'proguards', include: '*.pro')
+        }
+    }
+    lintOptions {
+        abortOnError false
+    }
 }
