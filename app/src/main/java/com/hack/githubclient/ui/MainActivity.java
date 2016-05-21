@@ -2,26 +2,31 @@ package com.hack.githubclient.ui;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.view.View;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.hack.githubclient.R;
+import com.hack.githubclient.entity.User;
+import com.hack.githubclient.ui.base.BaseActivityView;
 
-public class MainActivity extends AppCompatActivity
+public class MainActivity extends BaseActivityView<MainPresenter>
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -40,8 +45,20 @@ public class MainActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        mPresenter.getUser();
+    }
+
+    @Override
+    protected int getLayoutID() {
+        return R.layout.activity_main;
+    }
+
+    @Override
+    protected void injectComponent() {
+        getActivityComponent().inject(this);
     }
 
     @Override
@@ -99,5 +116,14 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void showUser(User user) {
+        ((TextView) navigationView.getHeaderView(0).findViewById(R.id.name_tv)).setText(user.name);
+        ((TextView) navigationView.getHeaderView(0).findViewById(R.id.email_tv)).setText(user.email);
+        Glide.with(this).load(user.avatarUrl)
+                .placeholder(R.drawable.logo)
+                .into(((ImageView) navigationView.getHeaderView(0).findViewById(R.id.imageView)));
+
     }
 }

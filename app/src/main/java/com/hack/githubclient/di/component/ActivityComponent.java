@@ -1,10 +1,9 @@
 package com.hack.githubclient.di.component;
 
-import android.app.Activity;
-
 import com.hack.githubclient.di.modules.ActivityModule;
 import com.hack.githubclient.di.scope.PerActivity;
 import com.hack.githubclient.ui.LoginActivity;
+import com.hack.githubclient.ui.MainActivity;
 
 import dagger.Component;
 
@@ -16,5 +15,7 @@ import dagger.Component;
 public interface ActivityComponent {
 
     void inject(LoginActivity activity);
+
+    void inject(MainActivity activity);
 
 }

@@ -1,7 +1,6 @@
 package com.hack.githubclient.ui;
 
 
-import android.text.TextUtils;
 import android.util.Log;
 
 import com.hack.githubclient.Constants;
@@ -15,31 +14,23 @@ import javax.inject.Inject;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-/**
- * Created by Asuka on 16/5/21.
- */
 @PerActivity
-public class LoginPresenter extends BasePresenter<LoginActivity> {
+public class MainPresenter extends BasePresenter<MainActivity> {
 
     private ApiService apiService;
     private LocalPersistent localPersistent;
 
     @Inject
-    public LoginPresenter(ApiService apiService, LocalPersistent localPersistent) {
+    public MainPresenter(ApiService apiService, LocalPersistent localPersistent) {
         this.apiService = apiService;
         this.localPersistent = localPersistent;
     }
 
-    public void userLogin(String username, String password) {
-        if (TextUtils.isEmpty(username)) {
-            mView.showError("请输入用户名");
-            return;
-        }
-        if (TextUtils.isEmpty(password)) {
-            mView.showError("请输入密码");
-            return;
-        }
+    public void getUser() {
+        mView.showUser(localPersistent.getUser());
+    }
 
+    public void userLogin(String username, String password) {
         apiService.getUserInfo(username, Constants.CLIENT_ID, Constants.CLIENT_SECRET)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())

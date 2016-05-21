@@ -1,10 +1,9 @@
 package com.hack.githubclient.di.modules;
 
-import android.app.Application;
-
-import com.hack.githubclient.LocalPersistent;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.hack.githubclient.api.APIOAuth;
 import com.hack.githubclient.api.Protocol;
-import com.hack.githubclient.serivce.ApiService;
 
 import javax.inject.Singleton;
 
@@ -17,20 +16,7 @@ import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 @Module
-@Singleton
-public class ApplicationModule {
-
-    private final Application application;
-
-    public ApplicationModule(Application application) {
-        this.application = application;
-    }
-
-    @Provides
-    @Singleton
-    public Application provideApplication() {
-        return application;
-    }
+public class APIModule {
 
     @Provides
     @Singleton
@@ -51,24 +37,27 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
-    public Retrofit provideRetrofit(OkHttpClient okHttpClient) {
-        return new Retrofit.Builder()
+    public Gson provideGson() {
+        return new GsonBuilder()
+                .excludeFieldsWithoutExposeAnnotation()
+                .create();
+    }
+
+    @Provides
+    @Singleton
+    public Retrofit provideRetrofit(OkHttpClient okHttpClient, Gson gson) {
+        Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Protocol.BASE_URL)
-                .client(okHttpClient)
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(okHttpClient)
                 .build();
+        return retrofit;
     }
 
     @Provides
     @Singleton
-    public ApiService provideApiService(Retrofit retrofit) {
-        return retrofit.create(ApiService.class);
-    }
-
-    @Provides
-    @Singleton
-    public LocalPersistent provideLocalPersistent() {
-        return new LocalPersistent();
+    protected APIOAuth provideAPIOAuth(Retrofit retrofit) {
+        return retrofit.create(APIOAuth.class);
     }
 }

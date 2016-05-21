@@ -2,6 +2,7 @@ package com.hack.githubclient.di.component;
 
 import android.app.Application;
 
+import com.hack.githubclient.LocalPersistent;
 import com.hack.githubclient.di.modules.ApplicationModule;
 import com.hack.githubclient.serivce.ApiService;
 
@@ -16,4 +17,6 @@ public interface ApplicationComponent {
     Application application();
 
     ApiService apiService();
+
+    LocalPersistent localPersistent();
 }

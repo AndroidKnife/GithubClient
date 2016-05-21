@@ -1,14 +1,13 @@
 package com.hack.githubclient.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
-import android.util.Log;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hack.githubclient.R;
+import com.hack.githubclient.entity.User;
 import com.hack.githubclient.ui.base.BaseActivityView;
 
 import butterknife.BindView;
@@ -45,13 +44,17 @@ public class LoginActivity extends BaseActivityView<LoginPresenter> {
     }
 
     @OnClick(R.id.btn_login)
-    public void login(){
+    public void login() {
         mPresenter.userLogin(mEditUsername.getText().toString(), mEditPassword.getText().toString());
     }
 
     public void showError(String messgae) {
 //        Snackbar.make(coordinatorLayout,messgae,Snackbar.LENGTH_SHORT).show();
-        Toast.makeText(this,messgae,Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, messgae, Toast.LENGTH_SHORT).show();
     }
 
+    public void showUser(User user) {
+        startActivity(new Intent(this, MainActivity.class));
+        finish();
+    }
 }
