@@ -1,33 +1,46 @@
 package com.hack.githubclient.ui;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.hack.githubclient.R;
-import com.hack.githubclient.di.component.ActivityComponer;
-import com.hack.githubclient.di.component.DaggerActivityComponer;
-import com.hack.githubclient.di.modules.ActivityModule;
+import com.hack.githubclient.ui.base.BaseActivityView;
 
-import javax.inject.Inject;
+import butterknife.BindView;
+import butterknife.OnClick;
+
 
 /**
  * Created by Asuka on 16/5/21.
  */
-public class LoginActivity extends Activity {
+public class LoginActivity extends BaseActivityView<LoginPresenter> {
 
-    @Inject
-    protected String mString;
-
-    private TextView mTextView;
+    @BindView(R.id.textView)
+    TextView mTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-        ActivityComponer componer = DaggerActivityComponer.builder().activityModule(new ActivityModule(this)).build();
-        componer.inject(this);
-        mTextView = (TextView) findViewById(R.id.textView);
-        mTextView.setText(mString);
+        mPresenter.fetchTitle();
+    }
+
+    @Override
+    protected int getLayoutID() {
+        return R.layout.activity_login;
+    }
+
+    @Override
+    protected void injectComponent() {
+        getActivityComponent().inject(this);
+    }
+
+    @OnClick(R.id.textView)
+    public void a(){
+        Log.d("aaa","AAaaaa");
+    }
+
+    public void showTitle(String title) {
+        mTextView.setText(title);
     }
 }

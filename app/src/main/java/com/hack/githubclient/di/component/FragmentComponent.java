@@ -7,5 +7,5 @@ import dagger.Component;
 
 @PerFragment
 @Component(dependencies = ApplicationComponent.class, modules = {FragmentModule.class})
-public class FragmentComponent {
+public interface FragmentComponent {
 }
