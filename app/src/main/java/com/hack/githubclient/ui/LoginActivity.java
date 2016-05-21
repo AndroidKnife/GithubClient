@@ -1,8 +1,12 @@
 package com.hack.githubclient.ui;
 
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.hack.githubclient.R;
 import com.hack.githubclient.ui.base.BaseActivityView;
@@ -16,13 +20,18 @@ import butterknife.OnClick;
  */
 public class LoginActivity extends BaseActivityView<LoginPresenter> {
 
-    @BindView(R.id.textView)
-    TextView mTextView;
+    @BindView(R.id.edit_username)
+    EditText mEditUsername;
+
+    @BindView(R.id.edit_password)
+    EditText mEditPassword;
+    @BindView(R.id.tips)
+    CoordinatorLayout coordinatorLayout;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mPresenter.fetchTitle();
     }
 
     @Override
@@ -35,12 +44,14 @@ public class LoginActivity extends BaseActivityView<LoginPresenter> {
         getActivityComponent().inject(this);
     }
 
-    @OnClick(R.id.textView)
-    public void a(){
-        Log.d("aaa","AAaaaa");
+    @OnClick(R.id.btn_login)
+    public void login(){
+        mPresenter.userLogin(mEditUsername.getText().toString(), mEditPassword.getText().toString());
     }
 
-    public void showTitle(String title) {
-        mTextView.setText(title);
+    public void showError(String messgae) {
+//        Snackbar.make(coordinatorLayout,messgae,Snackbar.LENGTH_SHORT).show();
+        Toast.makeText(this,messgae,Toast.LENGTH_SHORT).show();
     }
+
 }

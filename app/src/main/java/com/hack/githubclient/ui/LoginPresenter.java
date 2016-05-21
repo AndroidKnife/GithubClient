@@ -1,10 +1,12 @@
 package com.hack.githubclient.ui;
 
-import android.app.Application;
+
+import android.text.TextUtils;
+import android.widget.Toast;
 
 import com.hack.githubclient.di.scope.PerActivity;
+import com.hack.githubclient.serivce.ApiService;
 import com.hack.githubclient.ui.base.BasePresenter;
-import com.hack.githubclient.ui.base.MVPView;
 
 import javax.inject.Inject;
 
@@ -14,12 +16,21 @@ import javax.inject.Inject;
 @PerActivity
 public class LoginPresenter extends BasePresenter<LoginActivity> {
 
+    private ApiService apiService;
 
     @Inject
-    public LoginPresenter() {
+    public LoginPresenter(ApiService apiService) {
+        this.apiService = apiService;
     }
 
-    public void fetchTitle() {
-        mView.showTitle("hoaiaiaiaiai");
+    public void userLogin(String username,String password){
+        if(TextUtils.isEmpty(username)){
+            mView.showError("请输入用户名");
+            return;
+        }
+        if(TextUtils.isEmpty(password)){
+            mView.showError("请输入密码");
+            return;
+        }
     }
 }
