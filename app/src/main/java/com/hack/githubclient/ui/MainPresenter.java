@@ -30,13 +30,12 @@ public class MainPresenter extends BasePresenter<MainActivity> {
         mView.showUser(localPersistent.getUser());
     }
 
-    public void userLogin(String username, String password) {
-        apiService.getUserInfo(username, Constants.CLIENT_ID, Constants.CLIENT_SECRET)
+    public void getUserRepos() {
+        apiService.getUserRepos(localPersistent.getUser().name, Constants.CLIENT_ID, Constants.CLIENT_SECRET)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(user -> {
-                    localPersistent.setUser(user);
-                    mView.showUser(user);
+                .subscribe(repos -> {
+                    mView.showRepos(repos);
                 }, throwable -> {
                     Log.e("xxx", "throw=" + throwable.getMessage());
                 });

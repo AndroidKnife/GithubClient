@@ -16,13 +16,20 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.hack.githubclient.R;
+import com.hack.githubclient.entity.Repos;
 import com.hack.githubclient.entity.User;
 import com.hack.githubclient.ui.base.BaseActivityView;
+
+import java.util.ArrayList;
+
+import butterknife.BindView;
 
 public class MainActivity extends BaseActivityView<MainPresenter>
         implements NavigationView.OnNavigationItemSelectedListener {
 
     NavigationView navigationView;
+    @BindView(R.id.repos)
+    TextView reposTV;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +56,7 @@ public class MainActivity extends BaseActivityView<MainPresenter>
         navigationView.setNavigationItemSelectedListener(this);
 
         mPresenter.getUser();
+        mPresenter.getUserRepos();
     }
 
     @Override
@@ -125,5 +133,13 @@ public class MainActivity extends BaseActivityView<MainPresenter>
                 .placeholder(R.drawable.logo)
                 .into(((ImageView) navigationView.getHeaderView(0).findViewById(R.id.imageView)));
 
+    }
+
+    public void showRepos(ArrayList<Repos> repos) {
+        StringBuilder builder = new StringBuilder();
+        for (Repos repos1 : repos) {
+            builder.append(repos1.name + " \n");
+        }
+        reposTV.setText(builder.toString());
     }
 }
